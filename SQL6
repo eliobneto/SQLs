@@ -1,0 +1,4 @@
+select * from AVA.AVA_ALUNO_EGRESSO 
+    where nm_aluno like '%VALERIA%' 
+    for read only with ur;
+

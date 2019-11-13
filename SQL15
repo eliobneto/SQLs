@@ -1,0 +1,128 @@
+--delete 
+from ava.ava_resposta 
+where cd_resposta
+in (
+    select a6 
+    from (
+        select cd_pergunta a1,cd_opcao a2, cd_usuario a3, cd_disciplina a4, nu_turma a5, min(cd_resposta) a6 
+        from ava.ava_resposta 
+        where (cd_pergunta,cd_opcao, cd_usuario, cd_disciplina, nu_turma) 
+        in (
+            select distinct c1, c2, c3, c4, c5 
+            from (
+                Select cd_pergunta c1, cd_opcao c2, cd_usuario c3, cd_disciplina c4, nu_turma c5, count(*) 
+                from ava.ava_resposta 
+                where cd_usuario <> '-' and cd_pergunta >= 397
+                group by cd_pergunta, cd_opcao, cd_usuario, cd_disciplina, nu_turma 
+                having count(*) > 1) 
+        as t1) 
+    group by cd_pergunta,cd_opcao, cd_usuario, cd_disciplina, nu_turma) 
+t2);
+
+delete from ava.ava_resposta 
+where cd_resposta 
+in (
+    select cd_resposta 
+    from ava.ava_resposta t3, (
+        select cd_pergunta a1, cd_usuario a3, cd_disciplina a4, nu_turma a5, max(cd_resposta) a6  
+        from ava.ava_resposta 
+        where (cd_pergunta, cd_usuario, cd_disciplina, nu_turma) 
+        in (
+            select distinct c1, c3, c4, c5 
+            from (
+                Select  cd_pergunta c1, cd_usuario c3, cd_disciplina c4, nu_turma c5, count(*) 
+                from ava.ava_resposta 
+                where cd_usuario <> '-' and cd_pergunta >= 397
+                group by  cd_pergunta,  cd_usuario, cd_disciplina, nu_turma 
+                having count(*) > 1) 
+        as t1) 
+    group by cd_pergunta, cd_usuario, cd_disciplina, nu_turma) t4 
+where cd_pergunta=a1 and  cd_usuario=a3 and  cd_disciplina=a4 and nu_turma=a5 and cd_resposta <> a6
+);
+
+select * from ava.ava_resposta 
+where cd_resposta 
+in (
+    select cd_resposta 
+    from ava.ava_resposta t3, (
+        select cd_pergunta a1, cd_usuario a3, cd_disciplina a4, nu_turma a5, max(cd_resposta) a6  
+        from ava.ava_resposta 
+        where (cd_pergunta, cd_usuario, cd_disciplina, nu_turma) 
+        in (
+            select distinct c1, c3, c4, c5 
+            from (
+                Select  cd_pergunta c1, cd_usuario c3, cd_disciplina c4, nu_turma c5, count(*) 
+                from ava.ava_resposta 
+                where cd_usuario <> '-' and cd_pergunta >= 397
+                group by  cd_pergunta,  cd_usuario, cd_disciplina, nu_turma 
+                having count(*) > 1) 
+        as t1) 
+    group by cd_pergunta, cd_usuario, cd_disciplina, nu_turma) t4 
+where cd_pergunta=a1 and  cd_usuario=a3 and  cd_disciplina=a4 and nu_turma=a5 and cd_resposta <> a6
+)for read only with ur;
+
+select cd_pergunta a1,cd_opcao a2, cd_usuario a3, cd_disciplina a4, nu_turma a5, cd_resposta a6  
+        from ava.ava_resposta 
+        where (cd_pergunta, cd_usuario, cd_disciplina, nu_turma) 
+        in (
+            select distinct c1, c2, c3, c4, c5 
+            from (
+                Select  cd_pergunta c1, cd_usuario c3, cd_disciplina c4, nu_turma c5, count(*) 
+                from ava.ava_resposta 
+                where cd_usuario <> '-' and cd_pergunta >= 397
+                group by  cd_pergunta, cd_opcao, cd_usuario, cd_disciplina, nu_turma 
+                having count(*) > 1) 
+        as t1) order by 1,2,3,4,5,6
+    
+
+
+
+
+
+
+
+
+
+SELECT a.*
+FROM ava.AVA_RESPOSTA a
+JOIN (select cd_pergunta, CD_USUARIO, count(*) 
+    from AVA.AVA_RESPOSTA 
+    where cd_pergunta between 397 and 436 
+    and cd_usuario <> '-' 
+    group by CD_PERGUNTA, CD_USUARIO 
+    having count(*)>1 ) b
+ON a.CD_USUARIO = b.cd_usuario
+AND a.CD_PERGUNTA = b.cd_pergunta
+ORDER BY a.CD_RESPOSTA
+for read only with ur;
+
+SELECT a.*
+FROM ava.AVA_RESPOSTA a
+JOIN (select cd_pergunta, CD_USUARIO, CD_DISCIPLINA, nu_turma, count(*) 
+    from AVA.AVA_RESPOSTA 
+    where cd_pergunta between 437 and 447 
+    and cd_usuario <> '-' 
+    group by CD_PERGUNTA, CD_USUARIO, CD_DISCIPLINA, nu_turma
+    having count(*)>1 ) b
+ON a.CD_USUARIO = b.cd_usuario
+AND a.CD_PERGUNTA = b.cd_pergunta
+and a.CD_DISCIPLINA = b.cd_disciplina
+and a.NU_TURMA = b.nu_turma
+ORDER BY a.CD_RESPOSTA
+for read only with ur;
+
+SELECT a.*
+FROM ava.AVA_RESPOSTA a
+JOIN (select cd_pergunta, CD_USUARIO, count(*) 
+    from AVA.AVA_RESPOSTA 
+    where cd_pergunta between 448 and 463 
+    and cd_usuario <> '-' 
+    group by CD_PERGUNTA, CD_USUARIO 
+    having count(*)>1 ) b
+ON a.CD_USUARIO = b.cd_usuario
+AND a.CD_PERGUNTA = b.cd_pergunta
+ORDER BY a.CD_RESPOSTA
+for read only with ur;
+
+
+select * from ava.ava_resposta for read only with ur;

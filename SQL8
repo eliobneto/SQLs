@@ -1,0 +1,78 @@
+select * from AVA.AVA_RESPOSTA where cd_pergunta between 397 and 463;
+
+
+--Seleciona as respostas do grupo de perguntas de disciplinas
+select * from AVA.AVA_RESPOSTA where cd_pergunta between 437 and 447 for read only with ur;
+select * from AVA.AVA_PERGUNTA where cd_pergunta > 437 and TP_PERGUNTA = 'A' for read only with ur;
+
+
+--Atualiza o banco colocando o CURSO das disciplinas do grupo de perguntas FECHADAS de disciplinas
+UPDATE AVA.AVA_RESPOSTA
+SET CD_CURSO = 
+    (
+    SELECT CD_CURSO
+    FROM DAA.SA_CUR_CURSO_DISC
+    WHERE (CD_DISCIPLINA, NU_TURMA)  in 
+        (
+        SELECT CD_DISCIPLINA, NU_TURMA 
+        FROM AVA.AVA_RESPOSTA 
+        WHERE CD_PERGUNTA 
+        BETWEEN 437 AND 447
+        )
+    )
+WHERE CD_PERGUNTA BETWEEN 437 AND 447
+
+
+--Atualiza o banco colocando o CURSO das disciplinas do grupo de perguntas ABERTAS de disciplinas
+UPDATE AVA.AVA_RESPOSTAABERTA
+SET CD_CURSO = 
+    (
+    SELECT CD_CURSO
+    FROM DAA.SA_CUR_CURSO_DISC
+    WHERE CD_DISCIPLINA, NU_TURMA = 
+        (
+            SELECT CD_DISCIPLINA, NU_TURMA FROM AVA.AVA_RESPOSTAABERTA WHERE CD_PERGUNTA = 448
+        )
+    )
+WHERE CD_PERGUNTA = 448
+
+--Atualiza o banco colocando o DEPARTAMENTO das disciplinas do grupo de perguntas FECHADAS de disciplinas
+UPDATE AVA.AVA_RESPOSTA
+SET CD_DEPTO = 
+    (
+    SELECT CD_DEPTO
+    FROM DAA.SA_DISC_DEPTO
+    WHERE CD_DISCIPLINA in 
+        (
+            SELECT CD_DISCIPLINA FROM AVA.AVA_RESPOSTA WHERE CD_PERGUNTA BETWEEN 437 AND 447
+        )
+    )
+WHERE CD_PERGUNTA BETWEEN 437 AND 447
+
+--Atualiza o banco colocando o DEPARTAMENTO das disciplinas do grupo de perguntas ABERTAS de disciplinas
+UPDATE AVA.AVA_RESPOSTA
+SET CD_DEPTO = 
+    (
+    SELECT CD_DEPTO, CD_DISCIPLINA
+    FROM DAA.SA_DISC_DEPTO
+    WHERE CD_DISCIPLINA, NU_TURMA = 
+        (
+            SELECT CD_DISCIPLINA, NU_TURMA FROM AVA.AVA_RESPOSTA WWHERE CD_PERGUNTA = 448
+        )
+    )
+WHERE CD_PERGUNTA = 448
+
+
+
+
+
+    (
+    SELECT CD_DEPTO, CD_DISCIPLINA
+    FROM DAA.SA_DISC_DEPTO
+    WHERE CD_DISCIPLINA in 
+        (
+            SELECT CD_DISCIPLINA FROM AVA.AVA_RESPOSTA WHERE CD_PERGUNTA BETWEEN 437 AND 447
+        )
+    )
+
+

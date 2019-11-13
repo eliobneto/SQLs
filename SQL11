@@ -1,0 +1,34 @@
+select * from AVA.AVA_RESPOSTAABERTA;
+
+select Pergunta, Nao_conheco/Total as Nao_conheco, Pessimo/Total as Pessimo, Ruim/Total as Ruim, Regular/Total as Regular, Bom/Total as Bom, Otimo/Total as Otimo, Total
+from (select pergunta.NM_PERGUNTA as Pergunta,
+sum(case when opcao.NM_OPCAO = 'Não conheço' then 1.00000 else 0 end) as Nao_conheco,
+sum(case when opcao.NM_OPCAO = 'Péssimo' then 1.00000 else 0 end) as Pessimo,
+sum(case when opcao.NM_OPCAO = 'Ruim' then 1.00000 else 0 end) as Ruim,
+sum(case when opcao.NM_OPCAO = 'Regular' then 1.00000 else 0 end) as Regular,
+sum(case when opcao.NM_OPCAO = 'Bom' then 1.00000 else 0 end) as Bom,
+sum(case when opcao.NM_OPCAO = 'Ótimo' then 1.00000 else 0 end) as Otimo,
+sum(case when opcao.NM_OPCAO = NULL then 0 else 1 end) as Total
+from ava.AVA_INSTRUMENTO instrumento, ava.AVA_GRUPO grupo , ava.AVA_SUBGRUPO subgrupo, ava.AVA_PERGUNTA pergunta, ava.AVA_RESPOSTA resposta, ava.AVA_OPCAO opcao
+where instrumento.cd_instrumento = 1 and
+      instrumento.CD_INSTRUMENTO = grupo.CD_INSTRUMENTO AND
+      grupo.CD_GRUPO = subgrupo.CD_GRUPO and
+      subgrupo.CD_SUBGRUPO = pergunta.CD_SUBGRUPO and
+      pergunta.TP_PERGUNTA = 'F' and
+      pergunta.CD_PERGUNTA = resposta.CD_PERGUNTA and
+      resposta.CD_OPCAO = opcao.CD_OPCAO and
+      resposta.CD_PERGUNTA = opcao.CD_PERGUNTA       
+group by  pergunta.NM_PERGUNTA
+order by  pergunta.NM_PERGUNTA)
+for read only with UR
+
+select grupo.nm_grupo, subgrupo.NM_SUBGRUPO, pergunta.NM_PERGUNTA as Pergunta, respostaaberta.DE_RESPOSTA 
+from ava.AVA_INSTRUMENTO instrumento, ava.AVA_GRUPO grupo , ava.AVA_SUBGRUPO subgrupo, ava.AVA_PERGUNTA pergunta, ava.AVA_RESPOSTAABERTA respostaaberta
+where instrumento.cd_instrumento = 1 and
+      instrumento.CD_INSTRUMENTO = grupo.CD_INSTRUMENTO AND
+      grupo.CD_GRUPO = subgrupo.CD_GRUPO and
+      subgrupo.CD_SUBGRUPO = pergunta.CD_SUBGRUPO and
+      pergunta.TP_PERGUNTA = 'A' and
+      pergunta.CD_PERGUNTA = respostaaberta.CD_PERGUNTA      
+group by  grupo.nm_grupo 
+order by  grupo.nm_grupo

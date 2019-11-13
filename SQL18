@@ -1,0 +1,8 @@
+select * from AVA.AVA_RESPOSTA where CD_RESPOSTA >= 751805 for read only with ur;
+select * from ava.AVA_RESPOSTA where cd_pergunta = 397 and cd_usuario like '%-%' for read only with ur
+select * from ava.AVA_RESPOSTA where CD_PERGUNTA >= 464 for read only with ur;
+--cd resposta 751805
+--
+--cd opcao 2385 
+select * from ava.AVA_PERGUNTA where CD_OPCAO = 2385 for read only with ur
+

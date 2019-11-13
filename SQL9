@@ -1,0 +1,43 @@
+--SELECIONA TODAS AS COLUNAS REPETIDAS
+
+Select cd_pergunta c1, cd_opcao c2, cd_usuario c3, cd_disciplina c4, nu_turma c5, count(*)
+    from ava.ava_resposta 
+    where cd_usuario <> '-' and cd_pergunta >= 397
+    group by cd_pergunta, cd_opcao, cd_usuario, cd_disciplina, nu_turma 
+    having count(*) > 1
+    for read only with ur;
+
+--SELECIONA TODAS AS COLUNAS REPETIDAS INCLUINDO A CD_RESPOSTA
+
+select * 
+from ava.ava_resposta 
+where (cd_pergunta,cd_opcao, cd_usuario, cd_disciplina, nu_turma) 
+in (
+    select distinct c1, c2, c3, c4, c5 
+    from (
+        Select cd_pergunta c1, cd_opcao c2, cd_usuario c3, cd_disciplina c4, nu_turma c5, count(*) 
+        from ava.ava_resposta 
+        where cd_usuario <> '-' and cd_pergunta >= 397
+        group by cd_pergunta, cd_opcao, cd_usuario, cd_disciplina, nu_turma 
+        having count(*) > 1) 
+as t1)
+for read only with ur;
+
+--SELECIONA A CHAVE DE MENOR VALOR DAS REPETICOES
+
+select a6 
+from (
+    select cd_pergunta a1,cd_opcao a2, cd_usuario a3, cd_disciplina a4, nu_turma a5, min(cd_resposta) a6 
+    from ava.ava_resposta 
+    where (cd_pergunta,cd_opcao, cd_usuario, cd_disciplina, nu_turma) 
+    in (
+        select distinct c1, c2, c3, c4, c5 
+        from (
+            Select cd_pergunta c1, cd_opcao c2, cd_usuario c3, cd_disciplina c4, nu_turma c5, count(*) 
+            from ava.ava_resposta 
+            where cd_usuario <> '-' and cd_pergunta >= 397 
+            group by cd_pergunta, cd_opcao, cd_usuario, cd_disciplina, nu_turma 
+            having count(*) > 1) 
+    as t1) 
+group by cd_pergunta,cd_opcao, cd_usuario, cd_disciplina, nu_turma) t2
+for read only with ur; 

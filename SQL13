@@ -1,0 +1,93 @@
+select  
+    Pergunta, 
+    Nao_sei_informar*100/Total as Nao_sei_informar, Nao_se_aplica*100/Total as Nao_se_aplica, 
+    Pessimo*100/Total as Pessimo, Ruim*100/Total as Ruim, Regular*100/Total as Regular, 
+    Bom*100/Total as Bom, Otimo*100/Total as Otimo, Total, nm_disciplina, nu_turma
+from (
+    select d.nm_PERGUNTA as Pergunta, d.cd_pergunta, g.nm_disciplina, g.nu_turma,
+        sum(case when f.NM_OPCAO = 'Não se aplica'       then 1.00000 else 0 end) as Nao_se_aplica,
+        sum(case when f.NM_OPCAO = 'Não sei informar'    then 1.00000 else 0 end) as Nao_sei_informar,
+        sum(case when f.NM_OPCAO = 'Péssimo'             then 1.00000 else 0 end) as Pessimo,
+        sum(case when f.NM_OPCAO = 'Ruim'                then 1.00000 else 0 end) as Ruim,
+        sum(case when f.NM_OPCAO = 'Regular'             then 1.00000 else 0 end) as Regular,
+        sum(case when f.NM_OPCAO = 'Bom'                 then 1.00000 else 0 end) as Bom,
+        sum(case when f.NM_OPCAO = 'Ótimo'               then 1.00000 else 0 end) as Otimo,
+        sum(case when f.NM_OPCAO = NULL then 0 else 1 end) as Total
+    from    
+        ava.AVA_INSTRUMENTO a, ava.AVA_GRUPO b, ava.AVA_SUBGRUPO c, ava.AVA_PERGUNTA d, 
+        ava.AVA_RESPOSTA e, ava.AVA_OPCAO f, table(select cd_disciplina, dt_ano_turma, nm_disciplina, tp_disciplina, nu_turma
+               from ava.AVA_DISCIPLINA_ALUNO where cd_disciplina = e.cd_disciplina fetch first 1 row only) as g
+    where
+        a.CD_INSTRUMENTO = b.CD_INSTRUMENTO AND a.cd_instrumento = 5    AND 
+        b.CD_GRUPO = c.CD_GRUPO             AND b.CD_GRUPO = 23         AND 
+        c.CD_SUBGRUPO = d.CD_SUBGRUPO       AND c.CD_SUBGRUPO = 58      AND
+	d.CD_PERGUNTA = e.CD_PERGUNTA       AND d.TP_PERGUNTA = 'F'     AND 
+        e.CD_OPCAO = f.CD_OPCAO             AND 
+        e.CD_PERGUNTA = f.CD_PERGUNTA       AND e.CD_PERGUNTA = 437     AND 
+        e.CD_DISCIPLINA = g.CD_DISCIPLINA   AND e.CD_DISCIPLINA = 6895  AND 
+	e.NU_TURMA = g.NU_TURMA             AND e.NU_TURMA = 1
+group by  
+    d.cd_PERGUNTA, d.nm_PERGUNTA, g.nm_disciplina, g.nu_turma
+order by  
+    d.cd_PERGUNTA);
+
+----------------------------
+
+select cd_disciplina, nu_turma, CD_RESPOSTA
+from AVA.AVA_RESPOSTA 
+where cd_usuario = 'ra84757' 
+
+
+
+-----------------------------------------ABAIXO ESTA PROTEGIDO DE DALTON----------------------------------------
+
+select 
+    d.nm_PERGUNTA as Pergunta, d.cd_pergunta, g.nm_disciplina, g.nu_turma, e.CD_RESPOSTA, e.CD_OPCAO
+from   
+    ava.AVA_INSTRUMENTO a, ava.AVA_GRUPO b, ava.AVA_SUBGRUPO c, ava.AVA_PERGUNTA d, 
+    ava.AVA_RESPOSTA e, ava.AVA_OPCAO f, ava.AVA_DISCIPLINA_ALUNO g
+where
+    a.cd_instrumento = 5 AND a.CD_INSTRUMENTO = b.CD_INSTRUMENTO AND b.CD_GRUPO = c.CD_GRUPO AND 
+    b.CD_GRUPO = 24 AND c.CD_SUBGRUPO = 63 AND c.CD_SUBGRUPO = d.CD_SUBGRUPO AND 
+    d.TP_PERGUNTA = 'F' AND d.CD_PERGUNTA = e.CD_PERGUNTA AND e.CD_OPCAO = f.CD_OPCAO AND 
+    e.CD_PERGUNTA = f.CD_PERGUNTA AND e.CD_PERGUNTA = 437 AND e.CD_DISCIPLINA = 6895 AND 
+    e.NU_TURMA = 1 AND e.CD_DISCIPLINA = g.CD_DISCIPLINA AND e.NU_TURMA = g.NU_TURMA 
+group by  
+    d.cd_PERGUNTA, d.nm_PERGUNTA, g.nm_disciplina, g.nu_turma, e.CD_RESPOSTA, e.CD_OPCAO
+order by  
+    d.cd_PERGUNTA
+
+-------------------------------------------------
+select Pergunta, 
+Nao_sei_informar*100/Total as Nao_sei_informar, 
+Nao_se_aplica*100/Total as Nao_se_aplica, 
+Pessimo*100/Total as Pessimo, 
+Ruim*100/Total as Ruim, 
+Regular*100/Total as Regular, 
+Bom*100/Total as Bom, 
+Otimo*100/Total as Otimo, 
+Total
+from (select d.nm_PERGUNTA as Pergunta, d.cd_pergunta,
+sum(case when f.NM_OPCAO = 'Não se aplica' then 1.00000 else 0 end) as Nao_se_aplica,
+sum(case when f.NM_OPCAO = 'Não sei informar' then 1.00000 else 0 end) as Nao_sei_informar,
+sum(case when f.NM_OPCAO = 'Péssimo' then 1.00000 else 0 end) as Pessimo,
+sum(case when f.NM_OPCAO = 'Ruim' then 1.00000 else 0 end) as Ruim,
+sum(case when f.NM_OPCAO = 'Regular' then 1.00000 else 0 end) as Regular,
+sum(case when f.NM_OPCAO = 'Bom' then 1.00000 else 0 end) as Bom,
+sum(case when f.NM_OPCAO = 'Ótimo' then 1.00000 else 0 end) as Otimo,
+count(f.CD_OPCAO) as Total
+from ava.AVA_INSTRUMENTO a, ava.AVA_GRUPO b, ava.AVA_SUBGRUPO c, ava.AVA_PERGUNTA d, ava.AVA_RESPOSTA e, ava.AVA_OPCAO f
+where a.cd_instrumento = 5 and
+      a.CD_INSTRUMENTO = b.CD_INSTRUMENTO AND
+      b.CD_GRUPO = c.CD_GRUPO and
+      b.CD_GRUPO = 23 and
+      c.CD_SUBGRUPO = 59 and
+      c.CD_SUBGRUPO = d.CD_SUBGRUPO and
+      d.TP_PERGUNTA = 'F' and
+      d.CD_PERGUNTA = e.CD_PERGUNTA and
+      e.CD_OPCAO = f.CD_OPCAO and
+      e.CD_PERGUNTA = f.CD_PERGUNTA         
+group by  d.cd_PERGUNTA, d.nm_PERGUNTA
+order by  d.cd_PERGUNTA)
+
+select * from ava.AVA_subGRUPO for read only with ur;

@@ -1,0 +1,48 @@
+select a.NM_INSTRUMENTO ,b.NM_GRUPO, c.NM_SUBGRUPO, d.NM_PERGUNTA, f.NM_OPCAO
+from ava.AVA_INSTRUMENTO a, ava.AVA_GRUPO b , ava.AVA_SUBGRUPO c, ava.AVA_PERGUNTA d, ava.AVA_RESPOSTA e, ava.AVA_OPCAO f
+where a.cd_instrumento = 1 and
+      a.CD_INSTRUMENTO = b.CD_INSTRUMENTO AND
+      b.CD_GRUPO = c.CD_GRUPO and
+      c.CD_SUBGRUPO = d.CD_SUBGRUPO and
+      d.TP_PERGUNTA = 'F' and
+      d.CD_PERGUNTA = e.CD_PERGUNTA and
+      e.CD_OPCAO = f.CD_OPCAO and
+      e.CD_PERGUNTA = f.CD_PERGUNTA
+
+group by a.nm_instrumento, b.NM_GRUPO , c.NM_SUBGRUPO, d.NU_PERGUNTA , d.NM_PERGUNTA, f.NM_OPCAO
+order by b.NM_GRUPO, c.NM_SUBGRUPO, d.NU_PERGUNTA;
+
+select b.NM_GRUPO, c.NM_SUBGRUPO, d.NM_PERGUNTA, b.CD_GRUPO, c.CD_SUBGRUPO
+from ava.AVA_INSTRUMENTO a, ava.AVA_GRUPO b , ava.AVA_SUBGRUPO c, ava.AVA_PERGUNTA d, ava.AVA_RESPOSTA e, ava.AVA_OPCAO f
+where a.cd_instrumento = 1 and
+      a.CD_INSTRUMENTO = b.CD_INSTRUMENTO AND
+      b.CD_GRUPO = c.CD_GRUPO and
+      c.CD_SUBGRUPO = d.CD_SUBGRUPO and
+      d.TP_PERGUNTA = 'F' and
+      d.CD_PERGUNTA = e.CD_PERGUNTA and
+      e.CD_OPCAO = f.CD_OPCAO and
+      e.CD_PERGUNTA = f.CD_PERGUNTA
+group by b.NM_GRUPO , c.NM_SUBGRUPO, d.NM_PERGUNTA, b.CD_GRUPO, c.CD_SUBGRUPO
+order by b.NM_GRUPO, c.NM_SUBGRUPO, d.NM_PERGUNTA, b.CD_GRUPO, c.CD_SUBGRUPO;
+
+select d.NM_PERGUNTA, 
+sum(case when f.NM_OPCAO = 'Não conheço' then 1 else 0 end) as Nao_conheco,
+sum(case when f.NM_OPCAO = 'Péssimo' then 1 else 0 end) as Pessimo,
+sum(case when f.NM_OPCAO = 'Ruim' then 1 else 0 end) as Ruim,
+sum(case when f.NM_OPCAO = 'Regular' then 1 else 0 end) as Regular,
+sum(case when f.NM_OPCAO = 'Bom' then 1 else 0 end) as Bom,
+sum(case when f.NM_OPCAO = 'Ótimo' then 1 else 0 end) as Otimo,
+sum(case when f.NM_OPCAO = NULL then 0 else 1 end) as Total
+from ava.AVA_INSTRUMENTO a, ava.AVA_GRUPO b , ava.AVA_SUBGRUPO c, ava.AVA_PERGUNTA d, ava.AVA_RESPOSTA e, ava.AVA_OPCAO f
+where a.cd_instrumento = 1 and
+      a.CD_INSTRUMENTO = b.CD_INSTRUMENTO AND
+      b.CD_GRUPO = c.CD_GRUPO and
+      c.CD_SUBGRUPO = d.CD_SUBGRUPO and
+      d.TP_PERGUNTA = 'F' and
+      d.CD_PERGUNTA = e.CD_PERGUNTA and
+      e.CD_OPCAO = f.CD_OPCAO and
+      e.CD_PERGUNTA = f.CD_PERGUNTA       
+group by  d.NM_PERGUNTA
+order by  d.NM_PERGUNTA;
+
+

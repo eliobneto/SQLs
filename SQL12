@@ -1,0 +1,11 @@
+select * from AVA.AVA_PERGUNTA where CD_PERGUNTA between 397 and 463 for read only with ur;
+
+select
+  cd_pergunta, count(*) as contagem
+from
+  ava.ava_resposta
+where
+  cd_pergunta between 397 and 435
+group by
+  cd_pergunta;
+

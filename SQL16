@@ -1,0 +1,72 @@
+select a.NM_INSTRUMENTO, b.NM_GRUPO, c.NM_SUBGRUPO, b.cd_grupo, c.cd_subgrupo
+from ava.AVA_INSTRUMENTO a, ava.AVA_GRUPO b , ava.AVA_SUBGRUPO c, ava.AVA_PERGUNTA d
+where a.cd_instrumento = 5 and
+      a.CD_INSTRUMENTO = b.CD_INSTRUMENTO AND
+      b.CD_GRUPO = c.CD_GRUPO AND
+      b.CD_GRUPO = 24 AND
+      d.CD_PERGUNTA not in (445,446,447)
+order by  b.cd_grupo, c.cd_subgrupo
+for read only with ur
+
+select * from ava.AVA_RESPOSTA where CD_PERGUNTA = 445 and CD_DISCIPLINA = 6895 for read only with ur;
+
+select  
+    Pergunta, 
+    Nao_sei_informar*100/Total as Nao_sei_informar, Nao_importante*100/Total as Nao_importante, Pouco_importante*100/Total as Pouco_importante, 
+    Importante*100/Total as Importante, Muito_importante*100/Total as Muito_importante, 
+    Total, nm_disciplina, nu_turma
+from (
+    select d.nm_PERGUNTA as Pergunta, d.cd_pergunta, g.nm_disciplina, g.nu_turma,
+        sum(case when f.NM_OPCAO = 'Não sei informar' then 1.00000 else 0 end) as Nao_sei_informar,
+        sum(case when f.NM_OPCAO = 'Não importante' then 1.00000 else 0 end) as Nao_importante,
+        sum(case when f.NM_OPCAO = 'Pouco importante' then 1.00000 else 0 end) as Pouco_importante,
+        sum(case when f.NM_OPCAO = 'Importante' then 1.00000 else 0 end) as Importante,
+        sum(case when f.NM_OPCAO = 'Muito importante' then 1.00000 else 0 end) as Muito_importante,
+        sum(case when f.NM_OPCAO = NULL then 0 else 1 end) as Total
+    from    
+        ava.AVA_INSTRUMENTO a, ava.AVA_GRUPO b, ava.AVA_SUBGRUPO c, ava.AVA_PERGUNTA d, 
+	ava.AVA_RESPOSTA e, ava.AVA_OPCAO f, ava.AVA_DISCIPLINA_ALUNO g
+    where
+        a.cd_instrumento = 5 AND a.CD_INSTRUMENTO = b.CD_INSTRUMENTO AND b.CD_GRUPO = c.CD_GRUPO AND 
+	b.CD_GRUPO = 24 AND c.CD_SUBGRUPO = 63 AND c.CD_SUBGRUPO = d.CD_SUBGRUPO AND 
+	d.TP_PERGUNTA = 'F' AND d.CD_PERGUNTA = e.CD_PERGUNTA AND e.CD_OPCAO = f.CD_OPCAO AND 
+        e.CD_PERGUNTA = f.CD_PERGUNTA AND e.CD_PERGUNTA = 445 AND e.CD_DISCIPLINA = 6895 AND 
+	e.NU_TURMA = 1 AND e.CD_DISCIPLINA = g.CD_DISCIPLINA AND e.NU_TURMA = g.NU_TURMA 
+group by  
+    d.cd_PERGUNTA, 
+    d.nm_PERGUNTA, 
+    g.nm_disciplina, 
+    g.nu_turma
+order by  
+    d.cd_PERGUNTA)
+
+
+select  
+    Pergunta, 
+    Nao_sei_informar as Nao_sei_informar, Nao_importante as Nao_importante, Pouco_importante as Pouco_importante, 
+    Importante as Importante, Muito_importante as Muito_importante, 
+    Total, nm_disciplina, nu_turma
+from (
+    select d.nm_PERGUNTA as Pergunta, d.cd_pergunta, g.nm_disciplina, g.nu_turma,
+        sum(case when f.NM_OPCAO = 'Não sei informar' then 1.00000 else 0 end) as Nao_sei_informar,
+        sum(case when f.NM_OPCAO = 'Não importante' then 1.00000 else 0 end) as Nao_importante,
+        sum(case when f.NM_OPCAO = 'Pouco importante' then 1.00000 else 0 end) as Pouco_importante,
+        sum(case when f.NM_OPCAO = 'Importante' then 1.00000 else 0 end) as Importante,
+        sum(case when f.NM_OPCAO = 'Muito importante' then 1.00000 else 0 end) as Muito_importante,
+        sum(case when f.NM_OPCAO = NULL then 0 else 1 end) as Total
+    from    
+        ava.AVA_INSTRUMENTO a, ava.AVA_GRUPO b, ava.AVA_SUBGRUPO c, ava.AVA_PERGUNTA d, 
+	ava.AVA_RESPOSTA e, ava.AVA_OPCAO f, ava.AVA_DISCIPLINA_ALUNO g
+    where
+        a.CD_INSTRUMENTO = b.CD_INSTRUMENTO AND a.cd_instrumento = 5    AND
+        b.CD_GRUPO = c.CD_GRUPO             AND b.CD_GRUPO = 24         AND 
+        c.CD_SUBGRUPO = d.CD_SUBGRUPO       AND c.CD_SUBGRUPO = 63      AND
+	d.CD_PERGUNTA = e.CD_PERGUNTA       AND d.TP_PERGUNTA = 'F'     AND 
+        e.CD_OPCAO = f.CD_OPCAO             AND 
+        e.CD_PERGUNTA = f.CD_PERGUNTA       AND e.CD_PERGUNTA = 445     AND 
+        e.CD_DISCIPLINA = g.CD_DISCIPLINA   AND e.CD_DISCIPLINA = 6895  AND 
+	e.NU_TURMA = g.NU_TURMA             AND e.NU_TURMA = 1  
+    group by  
+        d.cd_PERGUNTA, d.nm_PERGUNTA, g.nm_disciplina, g.nu_turma
+    order by  
+        d.cd_PERGUNTA)

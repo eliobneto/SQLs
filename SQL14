@@ -1,0 +1,32 @@
+select count(distinct(CD_USUARIO)) from AVA.AVA_LOG where cd_instrumento = 5 for read only with UR;
+
+select distinct(CD_USUARIO) from AVA.AVA_LOG where cd_instrumento = 5 for read only with UR;
+
+select * from AVA.AVA_LOG where cd_instrumento = 5 for read only with UR;
+
+select * from AVA.AVA_ALUNO_GRADUACAO where cd_curso = 35 for read only with ur;
+
+select dt_log, count(distinct(CD_USUARIO)) 
+from AVA.AVA_LOG 
+where cd_instrumento = 5
+group by DT_LOG for read only with UR;
+
+select dt_log, count(distinct(CD_USUARIO)) 
+from AVA.AVA_LOG, ava.AVA_ALUNO_GRADUACAO 
+where cd_instrumento = 5
+and int(substr(cd_usuario,3,10)) in (select distinct(cd_aluno) from AVA.AVA_ALUNO_GRADUACAO where cd_curso = 35) 
+group by DT_LOG for read only with UR;
+
+select nm_curso, count(distinct(cd_aluno)) from ava.AVA_ALUNO_GRADUACAO 
+where cd_aluno in 
+(select distinct(substr(cd_usuario,3,10)) 
+from AVA.AVA_LOG 
+where cd_instrumento = 5)
+group by nm_curso
+for read only with UR;
+
+
+select dt_log, count(distinct(CD_USUARIO)) 
+from AVA.AVA_LOG, ava.AVA_ALUNO_GRADUACAO 
+where cd_instrumento = 5
+and substr(cd_usuario,3,10) = '47735' group by DT_LOG for read only with UR;

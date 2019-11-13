@@ -1,0 +1,59 @@
+select * from AVA.AVA_LOG where cd_usuario = 'ra84757' for read only with ur;
+select * from AVA.AVA_RESPOSTA 
+where cd_usuario = 'ra84757' 
+for read only with ur;
+
+-----------
+
+select count(c.CD_PERGUNTA) as perguntas 
+from AVA.AVA_grupo a, ava.ava_subgrupo b,ava.AVA_PERGUNTA c
+where a.cd_instrumento = 5 and 
+     (a.fl_especial <> 'D'  or a.fl_especial is null) and 
+    a.CD_GRUPO = b.CD_GRUPO  and 
+     b.CD_SUBGRUPO = c.CD_SUBGRUPO and 
+   c.TP_PERGUNTA = 'F'
+
+-----------
+
+select count(c.CD_PERGUNTA)as perguntas 
+from AVA.AVA_grupo a, ava.ava_subgrupo b,ava.AVA_PERGUNTA c
+where a.cd_instrumento = 5 and 
+  a.fl_especial = 'D'  and 
+ a.CD_GRUPO = b.CD_GRUPO  and 
+  b.CD_SUBGRUPO = c.CD_SUBGRUPO and 
+ c.TP_PERGUNTA = 'F'
+
+-----------
+
+select *
+from AVA.AVA_DISCIPLINA_ALUNO
+where cd_aluno = 84757
+for read only with ur;
+
+-----------
+
+SELECT COUNT(CD_RESPOSTA) as respostas 
+FROM AVA.AVA_RESPOSTA 
+WHERE CD_usuario = 'ra84757'
+for read only with ur;
+
+------------
+
+select cd_disciplina, count(cd_pergunta)
+from AVA.AVA_RESPOSTA 
+where cd_usuario = 'ra84757'
+group by cd_disciplina
+for read only with ur;
+
+SELECT *
+FROM AVA.AVA_RESPOSTA 
+WHERE CD_usuario = 'ra84757'
+for read only with ur;
+
+select *
+from ava.AVA_LOG
+where CD_USUARIO = 'ra84757'
+for read only with ur;
+
+------------
+

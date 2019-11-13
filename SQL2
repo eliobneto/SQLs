@@ -1,0 +1,34 @@
+select PERGUNTA.NM_PERGUNTA,
+sum(case when OPCAO.NM_OPCAO = 'Péssimo' then 1 else null end) as Pessimo,
+sum(case when OPCAO.NM_OPCAO = 'Ruim' then 1 else null end) as Ruim,
+sum(case when OPCAO.NM_OPCAO = 'Regular' then 1 else null end) as Regular,
+sum(case when OPCAO.NM_OPCAO = 'Bom' then 1 else null end) as Bom,
+sum(case when OPCAO.NM_OPCAO = 'Ótimo' then 1 else null end) as Otimo,
+
+sum(case when OPCAO.NM_OPCAO = 'Excessiva' then 1 else null end) as Excessiva,
+sum(case when OPCAO.NM_OPCAO = 'Boa' then 1 else null end) as Boa,
+sum(case when OPCAO.NM_OPCAO = 'Condizente em parte' then 1 else null end) as Condizente,
+sum(case when OPCAO.NM_OPCAO = 'Insuficiente' then 1 else null end) as Insuficiente,
+
+sum(case when OPCAO.NM_OPCAO = 'Disciplina teórica' then 1 else null end) as Teorica,
+sum(case when OPCAO.NM_OPCAO = 'Disciplina prática' then 1 else null end) as Pratica,
+sum(case when OPCAO.NM_OPCAO = 'Nenhuma destas' then 1 else null end) as Nenhuma,
+sum(case when OPCAO.NM_OPCAO = 'Disciplina comum' then 1 else null end) as Comum,
+sum(case when OPCAO.NM_OPCAO = 'Monografia' then 1 else null end) as Monografia,
+sum(case when OPCAO.NM_OPCAO = 'Laboratório' then 1 else null end) as Laboratorio,
+
+sum(case when OPCAO.NM_OPCAO = 'Muito importante' then 1 else null end) as Muitoimportante,
+sum(case when OPCAO.NM_OPCAO = 'Importante' then 1 else null end) as Importante,
+sum(case when OPCAO.NM_OPCAO = 'Pouco importante' then 1 else null end) as Poucoimportante,
+sum(case when OPCAO.NM_OPCAO = 'Não importante' then 1 else null end) as Naoimportante,
+
+
+
+sum(case when OPCAO.NM_OPCAO = 'Não sei informar' then 1 else null end) as Naoseiinformar,
+sum(case when OPCAO.NM_OPCAO = 'Não se aplica' then 1 else null end) as Naoseaplica,
+sum(case when OPCAO.NM_OPCAO = 'Não conheço' then 1 else null end) as Naoconheco
+
+from AVA.AVA_RESPOSTA RESPOSTA
+LEFT JOIN AVA.AVA_PERGUNTA PERGUNTA ON PERGUNTA.CD_PERGUNTA = RESPOSTA.CD_PERGUNTA
+LEFT JOIN AVA.AVA_OPCAO OPCAO ON RESPOSTA.CD_OPCAO = OPCAO.CD_OPCAO
+group by PERGUNTA.NM_PERGUNTA

@@ -1,0 +1,88 @@
+select nm_curso, count(distinct(cd_aluno)) from ava.AVA_ALUNO_GRADUACAO 
+where cd_aluno in 
+
+(select distinct(substr(cd_usuario,3,10)) 
+from AVA.AVA_LOG 
+where cd_instrumento = 5)
+
+group by nm_curso
+for read only with UR;
+
+****************************************
+
+select nm_curso, count(distinct(cd_aluno)) from ava.AVA_ALUNO_GRADUACAO 
+where cd_aluno in 
+
+(
+select distinct(substr(cd_usuario,3,10)) 
+from AVA.AVA_RESPOSTA 
+where cd_pergunta between 397 and 463
+and cd_usuario > '0'
+)
+
+group by nm_curso
+for read only with UR;
+
+*****************************
+
+select nm_curso, count(distinct(cd_aluno)) from ava.AVA_ALUNO_GRADUACAO 
+where cd_aluno not in 
+
+(
+select distinct(substr(cd_usuario,3,10)) 
+from AVA.AVA_RESPOSTA 
+where cd_pergunta between 397 and 463
+and cd_usuario > '0'
+)
+AND DT_ANO_INGRES < 2019
+
+group by nm_curso
+for read only with UR;
+
+*****************************
+
+select * from ava.AVA_ALUNO_GRADUACAO where CD_ALUNO = 100009
+for read only with UR;
+
+select distinct(substr(cd_usuario,3,10)) 
+from AVA.AVA_LOG 
+where cd_instrumento = 5
+for read only with ur;
+
+select nm_curso, cd_aluno from ava.AVA_ALUNO_GRADUACAO 
+where cd_aluno in 
+
+(select distinct(substr(cd_usuario,3,10)) as pimpo
+from AVA.AVA_LOG 
+where cd_instrumento = 5)
+
+for read only with UR;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

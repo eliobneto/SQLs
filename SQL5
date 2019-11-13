@@ -1,0 +1,43 @@
+select Pergunta, Nao_conheco/Total as Nao_conheco, Pessimo/Total as Pessimo, Ruim/Total as Ruim, Regular/Total as Regular, Bom/Total as Bom, Otimo/Total as Otimo, Total
+from (select d.NM_PERGUNTA as Pergunta,
+sum(case when f.NM_OPCAO = 'Não conheço' then 1.00000 else 0 end) as Nao_conheco,
+sum(case when f.NM_OPCAO = 'Péssimo' then 1.00000 else 0 end) as Pessimo,
+sum(case when f.NM_OPCAO = 'Ruim' then 1.00000 else 0 end) as Ruim,
+sum(case when f.NM_OPCAO = 'Regular' then 1.00000 else 0 end) as Regular,
+sum(case when f.NM_OPCAO = 'Bom' then 1.00000 else 0 end) as Bom,
+sum(case when f.NM_OPCAO = 'Ótimo' then 1.00000 else 0 end) as Otimo,
+sum(case when f.NM_OPCAO = NULL then 0 else 1 end) as Total
+from ava.AVA_INSTRUMENTO a, ava.AVA_GRUPO b , ava.AVA_SUBGRUPO c, ava.AVA_PERGUNTA d, ava.AVA_RESPOSTA e, ava.AVA_OPCAO f
+where a.cd_instrumento = 1 and
+      a.CD_INSTRUMENTO = b.CD_INSTRUMENTO AND
+      b.CD_GRUPO = c.CD_GRUPO and
+      c.CD_SUBGRUPO = d.CD_SUBGRUPO and
+      d.TP_PERGUNTA = 'F' and
+      d.CD_PERGUNTA = e.CD_PERGUNTA and
+      e.CD_OPCAO = f.CD_OPCAO and
+      e.CD_PERGUNTA = f.CD_PERGUNTA       
+group by  d.NM_PERGUNTA
+order by  d.NM_PERGUNTA)
+
+select Pergunta, Nao_sei_informar*100/Total as Nao_sei_informar, Nao_se_aplica*100/Total as Nao_se_aplica, Nao_conheco*100/Total as Nao_conheco, Pessimo*100/Total as Pessimo, Ruim*100/Total as Ruim, Regular*100/Total as Regular, Bom*100/Total as Bom, Otimo*100/Total as Otimo, Total*100/Total as Total
+from (select d.NM_PERGUNTA as Pergunta,
+sum(case when f.NM_OPCAO = 'Não se aplica' then 1.00000 else 0 end) as Nao_se_aplica,
+sum(case when f.NM_OPCAO = 'Não conheço' then 1.00000 else 0 end) as Nao_conheco,
+sum(case when f.NM_OPCAO = 'Não sei informar' then 1.00000 else 0 end) as Nao_sei_informar,
+sum(case when f.NM_OPCAO = 'Péssimo' then 1.00000 else 0 end) as Pessimo,
+sum(case when f.NM_OPCAO = 'Ruim' then 1.00000 else 0 end) as Ruim,
+sum(case when f.NM_OPCAO = 'Regular' then 1.00000 else 0 end) as Regular,
+sum(case when f.NM_OPCAO = 'Bom' then 1.00000 else 0 end) as Bom,
+sum(case when f.NM_OPCAO = 'Ótimo' then 1.00000 else 0 end) as Otimo,
+sum(case when f.NM_OPCAO = NULL then 0 else 1 end) as Total
+from ava.AVA_INSTRUMENTO a, ava.AVA_GRUPO b , ava.AVA_SUBGRUPO c, ava.AVA_PERGUNTA d, ava.AVA_RESPOSTA e, ava.AVA_OPCAO f
+where a.cd_instrumento = 2 and
+      a.CD_INSTRUMENTO = b.CD_INSTRUMENTO AND
+      b.CD_GRUPO = c.CD_GRUPO and
+      c.CD_SUBGRUPO = d.CD_SUBGRUPO and
+      d.TP_PERGUNTA = 'F' and
+      d.CD_PERGUNTA = e.CD_PERGUNTA and
+      e.CD_OPCAO = f.CD_OPCAO and
+      e.CD_PERGUNTA = f.CD_PERGUNTA       
+group by  d.NM_PERGUNTA
+order by  d.NM_PERGUNTA)
